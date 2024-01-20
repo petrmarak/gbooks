@@ -1,0 +1,7 @@
+{
+  "name": "gbooks",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
