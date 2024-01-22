@@ -1,0 +1,32 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Book detail</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Book detail</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <h1>{{ book.volumeInfo?.title }}</h1>
+  <h3>{{ book.volumeInfo?.subtitle }}</h3>
+
+  <img src="{{ book.volumeInfo?.imageLinks?.thumbnail }}" />
+
+  <h3>Published by:</h3>
+  <h4>{{ book.volumeInfo?.publisher }}</h4>
+  <h4>{{ book.volumeInfo?.publishedDate }}</h4>
+
+  <h3>Authors:</h3>
+  <h4>{{ book.volumeInfo?.authors }}</h4>
+  <h4 *ngIf="!book.volumeInfo?.authors">No authors are known for this book.</h4>
+
+  <h3>Description:</h3>
+  <p>{{ book.volumeInfo?.description }}</p>
+
+
+
+</ion-content>

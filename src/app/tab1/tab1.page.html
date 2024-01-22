@@ -18,14 +18,14 @@
     <ion-input type="text" placeholder="Enter book name" [(ngModel)]="bookSearchString" required="true"></ion-input>
     <ion-button (click)="performSearch(bookSearchString)">Search books</ion-button>
 
-    <div *ngIf="foundBooksArray.length > 0">
-      <h2>{{ foundBooksArray[0].totalItems }} books were found</h2>
+    <div *ngIf="booksResultArray.length > 0">
+      <h4>{{ booksResultArray[0].totalItems }} books were found</h4>
 
       <ion-list>
-        <div *ngFor="let topLevelItem of foundBooksArray">
+        <div *ngFor="let topLevelItem of booksResultArray">
           <div *ngFor="let bookItem of topLevelItem.items">
 
-            <ion-item detail="true">
+            <ion-item detail="true" [routerLink]="['detail', bookItem.id]" (click)="sendData(bookItem.id)">
               <ion-label>
                 <h3>{{ bookItem.volumeInfo.title }} ({{ bookItem.volumeInfo.publishedDate }})</h3>
               </ion-label>
