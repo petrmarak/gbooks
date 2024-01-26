@@ -1,8 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Search books
-    </ion-title>
+    <ion-title>Search books</ion-title>
+    <!-- <ion-progress-bar type="indeterminate" *ngIf="isLoading"></ion-progress-bar> -->
   </ion-toolbar>
 </ion-header>
 
@@ -15,27 +14,43 @@
 
   <!-- <app-explore-container name="Tab 1 page"></app-explore-container> -->
   <div id="container">
-    <ion-input type="text" placeholder="Enter book name" [(ngModel)]="bookSearchString" required="true"></ion-input>
-    <ion-button (click)="performSearch(bookSearchString)">Search books</ion-button>
+    <ion-icon id="search-book-icon" name="book-outline"></ion-icon>
+    <h1>Find books online</h1>
+    <div *ngIf="online$ | async; else offline">
+      <ion-input type="text" placeholder="Enter book name" [(ngModel)]="bookSearchString" required="true"></ion-input>
+      <ion-button (click)="performSearch(bookSearchString)">Search books</ion-button>
 
-    <div *ngIf="booksResultArray.length > 0">
-      <h4>{{ booksResultArray[0].totalItems }} books were found</h4>
+      <div *ngIf="isLoading">
+        <br />
+        <ion-spinner></ion-spinner>
+      </div>
 
-      <ion-list>
-        <div *ngFor="let topLevelItem of booksResultArray">
-          <div *ngFor="let bookItem of topLevelItem.items">
+      <div *ngIf="booksResultArray.length > 0">
+        <h4>{{ booksResultArray[0].totalItems }} books were found</h4>
 
-            <ion-item detail="true" [routerLink]="['detail', bookItem.id]" (click)="sendData(bookItem.id)">
-              <ion-label>
-                <h3>{{ bookItem.volumeInfo.title }} ({{ bookItem.volumeInfo.publishedDate }})</h3>
-              </ion-label>
-            </ion-item>
+        <ion-list>
+          <div *ngFor="let topLevelItem of booksResultArray">
+            <div *ngFor="let bookItem of topLevelItem.items">
 
+              <ion-item detail="true" [routerLink]="['detail', bookItem.id]" (click)="sendData(bookItem.id)">
+                <ion-label>
+                  <h3>{{ bookItem.volumeInfo.title }} ({{ bookItem.volumeInfo.publishedDate }})</h3>
+                </ion-label>
+              </ion-item>
+
+            </div>
           </div>
-        </div>
-      </ion-list>
+        </ion-list>
 
+      </div>
     </div>
+
+    <ng-template #offline>
+      <div>
+        <h5>Searching for books requires an active Internet connection.</h5>
+        <p>Your device is currently offline.</p>
+      </div>
+    </ng-template>
 
   </div>
 

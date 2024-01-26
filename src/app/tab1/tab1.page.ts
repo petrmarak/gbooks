@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { BooksService } from './services/books/books.service';
+import { BooksService } from '../services/books/books.service';
+import { Network } from '@ngx-pwa/offline';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tab1',
@@ -11,30 +13,69 @@ import { BooksService } from './services/books/books.service';
 export class Tab1Page {
   booksResultArray: any[] = [];
   bookSearchString: string = "";
-  volumeResult: any;
+  online$: Observable<boolean>;
+  isLoading: boolean = false;
 
-  constructor(public httpClient: HttpClient, private booksService: BooksService) {}
+  constructor(private httpClient: HttpClient, private booksService: BooksService, private network: Network) {
+    this.online$ = this.network.onlineChanges;
+  }
 
   /**
    * Searches for books according to a search term.
    * @param bookSearchString The search term.
    */
   performSearch(bookSearchString: string) {
+    this.isLoading = true;
     this.booksResultArray = [];
+
+    if (!bookSearchString) {
+      this.moveSearchCenter();
+      this.isLoading = false;
+      return;
+    }
 
     const url = `${environment.baseUrl}?q=${bookSearchString}&key=${environment.apiKey}`;  // potenciálně doplnit inauthor
     this.httpClient.get(url).subscribe(data => {
-      // console.log(data);
+      // console.warn(data);
       this.booksResultArray.push(data);
+      this.isLoading = false;
     });
+
+    this.moveSearchTop();
   }
 
   /**
-   * Give data about a specific book into service.
+   * Send data about a specific book into service.
    * @param bookId Book id.
    */
-  async sendData(bookId: string) {
-    this.booksService.data = bookId;
+  sendData(bookId: string) {
+    this.booksService.bookId = bookId;
+  }
+
+  moveSearchTop() {
+    const containerElement = document.getElementById('container');
+    const searchBookIconElement = document.getElementById('search-book-icon');
+
+    if (containerElement) {
+      containerElement.style.top = '0%';
+      containerElement.style.transform = 'translateY(0%)';
+    }
+    if (searchBookIconElement) {
+      searchBookIconElement.style.display = 'none';
+    }
+  }
+
+  moveSearchCenter() {
+    const containerElement = document.getElementById('container');
+    const searchBookIconElement = document.getElementById('search-book-icon');
+
+    if (containerElement) {
+      containerElement.style.top = '50%';
+      containerElement.style.transform = 'translateY(-50%)';
+    }
+    if (searchBookIconElement) {
+      searchBookIconElement.style.display = 'inline-block';
+    }
   }
 
 }

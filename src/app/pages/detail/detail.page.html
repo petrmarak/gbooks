@@ -27,6 +27,9 @@
   <h3>Description:</h3>
   <p>{{ book.volumeInfo?.description }}</p>
 
+  <ion-button *ngIf="(!isFavorite)" (click)="addToFavorites()"><ion-icon name="bookmark-outline"></ion-icon> &nbsp;Add to library</ion-button>
+  <ion-button *ngIf="(isFavorite)" (click)="removeFromFavorites()"><ion-icon name="remove-circle-outline"></ion-icon> &nbsp;Remove from library</ion-button>
 
 
 </ion-content>
+

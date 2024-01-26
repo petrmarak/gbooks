@@ -6,6 +6,10 @@ const routes: Routes = [
   {
     path: '',
     component: Tab2Page,
+  },
+  {
+    path: 'detail/:id',
+    loadChildren: () => import('../pages/detail/detail.module').then(m => m.DetailPageModule)
   }
 ];
 
