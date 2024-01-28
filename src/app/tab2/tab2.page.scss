@@ -1,4 +1,4 @@
-#container {
+#container-library-empty {
   text-align: center;
 
   position: relative;
@@ -6,14 +6,16 @@
   right: 0;
   top: 50%;
   transform: translateY(-50%);
+
+  font-family: 'SourceSans3-Regular';
 }
 
-#container strong {
+#container-library-empty strong {
   font-size: 20px;
   line-height: 26px;
 }
 
-#container p {
+#container-library-empty p {
   font-size: 16px;
   line-height: 22px;
 
@@ -22,7 +24,7 @@
   margin: 0;
 }
 
-#container a {
+#container-library-empty a {
   text-decoration: none;
 }
 

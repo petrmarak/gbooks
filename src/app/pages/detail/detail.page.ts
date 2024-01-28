@@ -14,15 +14,15 @@ export class DetailPage implements OnInit {
   allData: any[] = [];
   
   book: BookVolume = {} as BookVolume;
-  isFavorite: boolean = false;
-  allFavoriteBooks: BookVolume[] = [];
+  isSaved: boolean = false;
+  allBooksInLibrary: BookVolume[] = [];
 
   constructor(public httpClient: HttpClient, private booksService: BooksService) { }
 
   async ngOnInit() {
     this.bookId = this.booksService.bookId;
     this.allData = [];
-    await this.booksService.configurePreferences('favorites');
+    await this.booksService.configurePreferences('library');
 
     // get info about a specific book
     const url = `${environment.baseUrl}/${this.bookId}?key=${environment.apiKey}`;
@@ -35,45 +35,49 @@ export class DetailPage implements OnInit {
       console.log(this.book);
 
       // determines which button will be visible
-      this.isFavorite = await this.booksService.isBookStored(this.bookId);
-      console.warn('Is this book stored: ' + this.isFavorite);
+      this.isSaved = await this.booksService.isBookStored(this.bookId);
+      console.warn('Is this book stored: ' + this.isSaved);
     });
+  }
+
+  async ionViewDidEnter() {
+    this.isSaved = await this.booksService.isBookStored(this.bookId);
   }
 
 
 
-  async getAllFavorites() {
-    this.allFavoriteBooks = [];
+  async getAllBooksInLibrary() {
+    this.allBooksInLibrary = [];
     const allKeys = await this.booksService.getAllKeys();  // (await Preferences.keys()).keys;
 
     // load all books
     for (const key of allKeys) {
       const value: BookVolume = await this.booksService.getBook(key, true);
       if (value)
-        this.allFavoriteBooks.push(value);
+        this.allBooksInLibrary.push(value);
     }
   }
 
-  async addToFavorites() {
+  async addToLibrary() {
     if (!this.book.volumeInfo) {
       return;
     }
 
     await this.booksService.setBook(this.bookId, this.book);
-    this.isFavorite = true;
+    this.isSaved = true;
 
     // TEST
-    await this.getAllFavorites();
-    console.warn('Number of favorite books saved: ' + this.allFavoriteBooks.length);
+    await this.getAllBooksInLibrary();
+    console.warn('Number of books in library: ' + this.allBooksInLibrary.length);
   }
 
-  async removeFromFavorites() {
+  async removeFromLibrary() {
     this.booksService.removeBook(this.bookId);
-    this.isFavorite = false;
+    this.isSaved = false;
 
     // TEST
-    await this.getAllFavorites();
-    console.warn('Number of favorite books saved: ' + this.allFavoriteBooks.length);
+    await this.getAllBooksInLibrary();
+    console.warn('Number of books in library: ' + this.allBooksInLibrary.length);
   }
 
 }

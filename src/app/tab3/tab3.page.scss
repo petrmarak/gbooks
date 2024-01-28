@@ -1,0 +1,19 @@
+#container {
+    text-align: center;
+    margin: 20px;
+
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: 'SourceSans3-Regular';
+}
+
+#container a {
+    text-decoration: none;
+}
+
+#app-main-icon {
+    zoom: 3.0;
+}

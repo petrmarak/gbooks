@@ -1,24 +1,26 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Search books</ion-title>
-    <!-- <ion-progress-bar type="indeterminate" *ngIf="isLoading"></ion-progress-bar> -->
+    <ion-title>Find books online</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Search books</ion-title>
+      <ion-title size="large">Find books online</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <!-- <app-explore-container name="Tab 1 page"></app-explore-container> -->
   <div id="container">
     <ion-icon id="search-book-icon" name="book-outline"></ion-icon>
-    <h1>Find books online</h1>
+    <h1 id="main-title">LibraLink - Explore & Collect Books</h1>
+
     <div *ngIf="online$ | async; else offline">
-      <ion-input type="text" placeholder="Enter book name" [(ngModel)]="bookSearchString" required="true"></ion-input>
-      <ion-button (click)="performSearch(bookSearchString)">Search books</ion-button>
+      <ion-input type="text" placeholder="Enter book name" [(ngModel)]="bookSearchString"></ion-input> <!-- [required]="!(authorSearchString)" -->
+      <ion-input type="text" placeholder="Enter author's name" [(ngModel)]="authorSearchString"></ion-input>
+      <ion-button (click)="performSearch(bookSearchString, authorSearchString)">Search books</ion-button>&nbsp;
+      <ion-button color="light" (click)="openSearchOptionsModal()"><ion-icon name="settings-outline"></ion-icon></ion-button>
 
       <div *ngIf="isLoading">
         <br />
@@ -34,7 +36,9 @@
 
               <ion-item detail="true" [routerLink]="['detail', bookItem.id]" (click)="sendData(bookItem.id)">
                 <ion-label>
-                  <h3>{{ bookItem.volumeInfo.title }} ({{ bookItem.volumeInfo.publishedDate }})</h3>
+                  <strong>{{ bookItem.volumeInfo.title }}</strong>
+                  <p>Author: {{ bookItem.volumeInfo.authors }}</p>
+                  <p>Published: {{ bookItem.volumeInfo.publishedDate }}</p>
                 </ion-label>
               </ion-item>
 
@@ -47,7 +51,7 @@
 
     <ng-template #offline>
       <div>
-        <h5>Searching for books requires an active Internet connection.</h5>
+        <h5>Book search requires an active Internet connection.</h5>
         <p>Your device is currently offline.</p>
       </div>
     </ng-template>

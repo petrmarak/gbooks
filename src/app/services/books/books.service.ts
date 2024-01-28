@@ -50,4 +50,7 @@ export class BooksService {
     return (await Preferences.keys()).keys;
   }
 
+  async clearAllBooks() {
+    await Preferences.clear();
+  }
 }

@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
+
+import { ModalController } from '@ionic/angular';
+import { SearchOptionsModalComponent } from './search-options-modal/search-options-modal.component';
+
+import { environment } from 'src/environments/environment';
 import { BooksService } from '../services/books/books.service';
+import { SearchService } from '../services/search/search.service';
 import { Network } from '@ngx-pwa/offline';
 import { Observable } from 'rxjs';
 
@@ -13,10 +18,13 @@ import { Observable } from 'rxjs';
 export class Tab1Page {
   booksResultArray: any[] = [];
   bookSearchString: string = "";
+  authorSearchString: string = "";
   online$: Observable<boolean>;
   isLoading: boolean = false;
+  searchOptions: string = "";
 
-  constructor(private httpClient: HttpClient, private booksService: BooksService, private network: Network) {
+  constructor(private httpClient: HttpClient, private modalCtrl: ModalController, private booksService: BooksService, 
+    private searchService: SearchService, private network: Network) {
     this.online$ = this.network.onlineChanges;
   }
 
@@ -24,17 +32,49 @@ export class Tab1Page {
    * Searches for books according to a search term.
    * @param bookSearchString The search term.
    */
-  performSearch(bookSearchString: string) {
+  async performSearch(bookSearchString: string, authorSearchString: string) {
     this.isLoading = true;
     this.booksResultArray = [];
 
-    if (!bookSearchString) {
+    if (!bookSearchString && !authorSearchString) {
       this.moveSearchCenter();
       this.isLoading = false;
       return;
     }
 
-    const url = `${environment.baseUrl}?q=${bookSearchString}&key=${environment.apiKey}`;  // potenciálně doplnit inauthor
+    const loadStoredOptions = async () => {
+      this.searchOptions = "";
+      await this.searchService.configurePreferences("searchOptions");
+
+      const langRestrict = await this.searchService.getOption("langRestrict");
+      if (langRestrict)
+        this.searchOptions += `&langRestrict=${langRestrict}`;
+
+      const maxResults = await this.searchService.getOption("maxResults");
+      if (maxResults)
+        this.searchOptions += `&maxResults=${maxResults}`;
+
+      const orderByNewest = await this.searchService.getOption("orderByNewest");
+      if (orderByNewest)
+        this.searchOptions += `&orderBy=newest`;
+      else
+        this.searchOptions += `&orderBy=relevance`;
+
+      const printType = await this.searchService.getOption("printType");
+      if (printType)
+        this.searchOptions += `&printType=${printType}`;
+    }
+
+    let authorSearchParam: string = "";
+    if (authorSearchString) {
+      authorSearchParam = `+inauthor:${authorSearchString}`;
+    }
+
+    await loadStoredOptions();
+
+    // example of the URL: https://www.googleapis.com/books/v1/volumes?q=flowers+inauthor:keyes&maxResults=15&key=yourAPIKey
+    const url = `${environment.baseUrl}?q=${bookSearchString}${authorSearchParam}${this.searchOptions}&showPreorders=true&key=${environment.apiKey}`;
+    console.log("The search URL: " + url);
     this.httpClient.get(url).subscribe(data => {
       // console.warn(data);
       this.booksResultArray.push(data);
@@ -55,6 +95,7 @@ export class Tab1Page {
   moveSearchTop() {
     const containerElement = document.getElementById('container');
     const searchBookIconElement = document.getElementById('search-book-icon');
+    const mainTitleElement = document.getElementById('main-title');
 
     if (containerElement) {
       containerElement.style.top = '0%';
@@ -63,11 +104,15 @@ export class Tab1Page {
     if (searchBookIconElement) {
       searchBookIconElement.style.display = 'none';
     }
+    if (mainTitleElement) {
+      mainTitleElement.style.display = 'none';
+    }
   }
 
   moveSearchCenter() {
     const containerElement = document.getElementById('container');
     const searchBookIconElement = document.getElementById('search-book-icon');
+    const mainTitleElement = document.getElementById('main-title');
 
     if (containerElement) {
       containerElement.style.top = '50%';
@@ -76,6 +121,17 @@ export class Tab1Page {
     if (searchBookIconElement) {
       searchBookIconElement.style.display = 'inline-block';
     }
+    if (mainTitleElement) {
+      mainTitleElement.style.display = 'inline-block';
+    }
+  }
+
+  async openSearchOptionsModal() {
+    const modal = await this.modalCtrl.create({
+      component: SearchOptionsModalComponent
+    });
+
+    await modal.present();
   }
 
 }

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page implements OnInit {
-  allFavoriteBooks: BookVolume[] = [];
+  allSavedBooks: BookVolume[] = [];
   online$: Observable<boolean>;
 
   constructor(private booksService: BooksService, private network: Network) {
@@ -20,9 +20,9 @@ export class Tab2Page implements OnInit {
   ngOnInit() {
   }
 
-  async ionViewDidEnter() {
-    await this.booksService.configurePreferences('favorites');
-    await this.getAllFavorites();
+  async ionViewWillEnter() {
+    await this.booksService.configurePreferences('library');
+    await this.getAllSavedBooks();
   }
 
   sendData(bookId?: string) {
@@ -30,22 +30,27 @@ export class Tab2Page implements OnInit {
       this.booksService.bookId = bookId;
   }
 
-  async getAllFavorites() {
-    this.allFavoriteBooks = [];
+  async getAllSavedBooks() {
+    this.allSavedBooks = [];
     const allKeys = await this.booksService.getAllKeys();  // (await Preferences.keys()).keys;
 
     // load all books
     for (const key of allKeys) {
       const value: BookVolume = await this.booksService.getBook(key, true);
       if (value)
-        this.allFavoriteBooks.push(value);
+        this.allSavedBooks.push(value);
     }
   }
 
-  async removeFromFavorites(bookId?: string) {
+  async removeFromLibrary(bookId?: string) {
     if (bookId) {
       this.booksService.removeBook(bookId);
     }
+  }
+
+  async removeAllFromLibrary() {
+    await this.booksService.clearAllBooks();
+    await this.getAllSavedBooks();
   }
 
 }

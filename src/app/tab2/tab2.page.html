@@ -1,20 +1,23 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      My library - {{ allFavoriteBooks.length }} books
+      My library - {{ allSavedBooks.length }} {{ (allSavedBooks.length == 1) ? 'book' : 'books' }}
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button id="clearall-button" (click)="removeAllFromLibrary()">Clear all</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">My library - {{ allFavoriteBooks.length }} books</ion-title>
+      <ion-title size="large">My library - {{ allSavedBooks.length }} {{ (allSavedBooks.length == 1) ? 'book' : 'books' }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div *ngIf="allFavoriteBooks.length > 0; else noItems">
-    <div *ngFor="let bookItem of allFavoriteBooks">
+  <div *ngIf="allSavedBooks.length > 0; else noItems">
+    <div *ngFor="let bookItem of allSavedBooks">
 
       <ion-card [routerLink]="['detail', bookItem.id]" (click)="sendData(bookItem.id)">
         <ion-card-header>
@@ -26,9 +29,6 @@
           <img src="{{ bookItem.volumeInfo?.imageLinks?.thumbnail }}" height="100" />
           <br />
           {{ bookItem.volumeInfo?.subtitle }}
-          <!--
-          <ion-button shape="round" size="small" (click)="removeFromFavorites(bookItem.id);"><ion-icon name="remove-circle-outline"></ion-icon></ion-button>
-          -->
         </ion-card-content>
       </ion-card>
 
@@ -36,7 +36,7 @@
   </div>
 
   <ng-template #noItems>
-    <div id="container">
+    <div id="container-library-empty">
       <ion-icon id="library-icon" name="library-outline"></ion-icon>
       <h1>Your library is completely empty.</h1>
       <p>Find new books and add them to your library!</p>

@@ -1,0 +1,54 @@
+<ion-content>
+
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button id="cancel-button" (click)="dismissModal()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Search options</ion-title>
+    <ion-buttons slot="end">
+      <ion-button id="ok-button" (click)="submitModal()">OK</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-list>
+
+    <ion-item>
+      <ion-select label="Results in this language " [(ngModel)]="langRestrict">
+        <ion-select-option value="">
+          (Any language)
+        </ion-select-option>
+        <ion-select-option *ngFor="let lang of allLanguages" value="{{ ISO6391.getCode(lang) }}">
+          {{ lang }} - {{ ISO6391.getCode(lang) }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-range label="Number of results&nbsp;" [ticks]="false" [snaps]="true" [pin]="true" [min]="5" [max]="40"
+        [step]="5" [(ngModel)]="maxResults"></ion-range>
+    </ion-item>
+
+    <ion-item>
+      <ion-toggle [(ngModel)]="orderByNewest">Show recently published first</ion-toggle>
+    </ion-item>
+
+    <ion-item>
+      <ion-grid>
+        <ion-row class="ion-align-items-center">
+          <ion-col>
+            <ion-label>Print type</ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-radio-group [(ngModel)]="printType">
+              <ion-radio value="all">All</ion-radio>
+              <ion-radio value="books">Books only</ion-radio>
+              <ion-radio value="magazines">Magazines only</ion-radio>
+            </ion-radio-group>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+
+  </ion-list>
+
+</ion-content>
