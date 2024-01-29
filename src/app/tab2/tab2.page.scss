@@ -1,3 +1,14 @@
+ion-card-content {
+  padding: 0px;
+  margin: 8px;
+}
+
+ion-card-content img {
+  height: 150px;
+  width: 100px;
+  object-fit: contain;
+}
+
 #container-library-empty {
   text-align: center;
 
@@ -24,10 +35,10 @@
   margin: 0;
 }
 
-#container-library-empty a {
-  text-decoration: none;
-}
-
 #library-icon {
   zoom: 4.0;
+}
+
+ion-card-title {
+  margin-bottom: 8px;
 }

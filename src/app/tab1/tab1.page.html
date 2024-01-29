@@ -13,11 +13,11 @@
 
   <!-- <app-explore-container name="Tab 1 page"></app-explore-container> -->
   <div id="container">
-    <ion-icon id="search-book-icon" name="book-outline"></ion-icon>
+    <div><ion-icon id="search-book-icon" name="book-outline"></ion-icon></div>
     <h1 id="main-title">LibraLink - Explore & Collect Books</h1>
 
     <div *ngIf="online$ | async; else offline">
-      <ion-input type="text" placeholder="Enter book name" [(ngModel)]="bookSearchString"></ion-input> <!-- [required]="!(authorSearchString)" -->
+      <ion-input type="text" placeholder="Enter book name" [(ngModel)]="bookSearchString"></ion-input> <!-- [required] -->
       <ion-input type="text" placeholder="Enter author's name" [(ngModel)]="authorSearchString"></ion-input>
       <ion-button (click)="performSearch(bookSearchString, authorSearchString)">Search books</ion-button>&nbsp;
       <ion-button color="light" (click)="openSearchOptionsModal()"><ion-icon name="settings-outline"></ion-icon></ion-button>
@@ -51,7 +51,7 @@
 
     <ng-template #offline>
       <div>
-        <h5>Book search requires an active Internet connection.</h5>
+        <h5>Searching requires an active Internet connection.</h5>
         <p>Your device is currently offline.</p>
       </div>
     </ng-template>

@@ -1,3 +1,93 @@
 ion-content {
     font-family: 'OpenSans-Regular';
 }
+
+strong {
+    font-size: 16px;
+}
+
+// horizontal divider
+hr {
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
+    border: 0;
+    border-top: 1px solid gray;
+}
+
+#book-title {
+    margin-left: 10px;
+    margin-right: 10px;
+
+    font-family: 'OpenSans-Medium';
+    font-size: 2rem;
+    font-weight: bold;
+    color: gray;
+    background: linear-gradient(to left, #9b59b6, #3498db);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#book-subtitle {
+    margin-left: 10px;
+    margin-right: 10px;
+
+    font-family: 'OpenSans-Light';
+    font-size: 1.4rem;
+}
+
+#col-book-cover {
+    margin-right: 15px;
+}
+
+#img-book-cover {
+    width: 160px;
+}
+
+#page-count {
+    margin: 0;
+    margin-top: 5px;
+    text-align: center;
+}
+
+// the heading text "Author(s):"
+#authors-heading {
+    margin-top: 0px;
+    padding-top: 0px;
+}
+
+#authors {
+    font-family: 'OpenSans-Light';
+    font-size: 1.3rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#publisher-name, #published-date {
+    font-family: 'OpenSans-Light';
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#published-date {
+    font-size: 1.2rem;
+}
+
+#isbn {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#read-buy-links {
+    text-align: center;
+    position: relative;
+
+    a {
+        text-decoration: none;
+    }
+}
+
+// "Add to" or "Remove from library" button
+#div-library-button {
+    text-align: center;
+    position: relative;
+}

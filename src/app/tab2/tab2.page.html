@@ -6,6 +6,7 @@
     <ion-buttons slot="end">
       <ion-button id="clearall-button" (click)="removeAllFromLibrary()">Clear all</ion-button>
     </ion-buttons>
+    <ion-progress-bar type="indeterminate" *ngIf="isLoading"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
@@ -16,20 +17,31 @@
     </ion-toolbar>
   </ion-header>
 
-  <div *ngIf="allSavedBooks.length > 0; else noItems">
+  <div id="container" *ngIf="allSavedBooks.length > 0; else noItems">
     <div *ngFor="let bookItem of allSavedBooks">
 
       <ion-card [routerLink]="['detail', bookItem.id]" (click)="sendData(bookItem.id)">
-        <ion-card-header>
-          <ion-card-title>{{ bookItem.volumeInfo?.title }}</ion-card-title>
-          <ion-card-subtitle>{{ bookItem.volumeInfo?.publishedDate }}</ion-card-subtitle>
-        </ion-card-header>
-        
-        <ion-card-content>
-          <img src="{{ bookItem.volumeInfo?.imageLinks?.thumbnail }}" height="100" />
-          <br />
-          {{ bookItem.volumeInfo?.subtitle }}
-        </ion-card-content>
+
+        <ion-grid>
+          <ion-row class="ion-align-items-start">
+            <ion-col size="auto">
+              <ion-card-content>
+                <img src="{{ bookItem.volumeInfo?.imageLinks?.thumbnail }}" />
+              </ion-card-content>
+            </ion-col>
+
+            <ion-col>
+              <ion-card-header>
+                <ion-card-title>{{ bookItem.volumeInfo?.title }}</ion-card-title>
+                <div *ngFor="let author of bookItem.volumeInfo?.authors">
+                  <ion-card-subtitle>{{ author }}</ion-card-subtitle>
+                </div>
+                <ion-card-subtitle>{{ bookItem.volumeInfo?.publishedDate }}</ion-card-subtitle>
+              </ion-card-header>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
       </ion-card>
 
     </div>

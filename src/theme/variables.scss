@@ -243,6 +243,7 @@ html {
   --ion-dynamic-font: var(--ion-default-dynamic-font);
 }
 
+/** Custom fonts **/
 @font-face {
   font-family: 'SourceSans3-Regular';
   src: url('../assets/fonts/SourceSans3-Regular.ttf');
@@ -256,4 +257,14 @@ html {
 @font-face {
   font-family: 'OpenSans-Regular';
   src: url('../assets/fonts/OpenSans-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'OpenSans-Medium';
+  src: url('../assets/fonts/OpenSans-Medium.ttf');
+}
+
+@font-face {
+  font-family: 'OpenSans-Light';
+  src: url('../assets/fonts/OpenSans-Light.ttf');
 }

@@ -1,35 +1,109 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Book detail - {{ book.volumeInfo?.title }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ book.volumeInfo?.title }}</ion-title>
+    <ion-progress-bar type="indeterminate" *ngIf="isLoading"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content class="ion-padding" [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Book detail - {{ book.volumeInfo?.title }}</ion-title>
+      <ion-title size="large">{{ book.volumeInfo?.title }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <h1>{{ book.volumeInfo?.title }}</h1>
-  <h3>{{ book.volumeInfo?.subtitle }}</h3>
+  <h1 id="book-title">{{ book.volumeInfo?.title }}</h1>
+  <h2 id="book-subtitle">{{ book.volumeInfo?.subtitle }}</h2>
 
-  <img src="{{ book.volumeInfo?.imageLinks?.thumbnail }}" alt="Book thumbnail image"/>
+  <ion-grid>
+    <ion-row class="ion-align-items-start">
 
-  <h3>Published by:</h3>
-  <h4>{{ book.volumeInfo?.publisher }}</h4>
-  <h4>{{ book.volumeInfo?.publishedDate }}</h4>
+      <ion-col id="col-book-cover" size="auto">
+        <div *ngIf="book.volumeInfo?.imageLinks?.small; else imgFallback">
+          <img id="img-book-cover" src="{{ book.volumeInfo?.imageLinks?.small }}" alt="book cover image" />
+        </div>
+        <!-- if larger cover image is not included in the API response, the thumbnail will be shown instead -->
+        <ng-template #imgFallback>
+          <img id="img-book-cover" src="{{ book.volumeInfo?.imageLinks?.thumbnail }}" alt="book cover image" />
+        </ng-template>
 
-  <h3>Author(s):</h3>
-  <h4>{{ book.volumeInfo?.authors }}</h4>
-  <h4 *ngIf="!book.volumeInfo?.authors">No authors are known for this book.</h4>
+        <p id="page-count">{{ book.volumeInfo?.pageCount }} pages</p>
+      </ion-col>
 
-  <h3>Description:</h3>
-  <p>{{ book.volumeInfo?.description }}</p>
+      <ion-col>
+        <strong id="authors-heading">{{ (book.volumeInfo?.authors?.length == 1) ? 'Author' : 'Authors' }}: </strong>
+        <div *ngFor="let author of book.volumeInfo?.authors">
+          <h3 id="authors">{{ author }}</h3>
+        </div>
+        <br />
 
-  <ion-button color="warning" *ngIf="(!isSaved)" (click)="addToLibrary()"><ion-icon name="bookmark-outline"></ion-icon> &nbsp;Add to library</ion-button>
-  <ion-button color="danger" *ngIf="(isSaved)" (click)="removeFromLibrary()"><ion-icon name="remove-circle-outline"></ion-icon> &nbsp;Remove from library</ion-button>
+        <strong>Published: </strong>
+        <h4 id="published-date">{{ book.volumeInfo?.publishedDate }}</h4>
+        <p *ngIf="!book.volumeInfo?.authors">No authors are known for this book.</p>
+      </ion-col>
 
+    </ion-row>
+  </ion-grid>
+
+  <hr />
+
+  <strong>Categories: </strong>
+  <p>{{ book.volumeInfo?.categories?.join(', ') }}</p>
+
+  <p><strong>Language: </strong>{{ getLanguageName(book.volumeInfo?.language) }}</p>
+
+  <div *ngIf="book.volumeInfo?.dimensions?.height">
+    <p>
+      <strong>Dimensions: </strong>
+      {{ book.volumeInfo?.dimensions?.height }} × {{ book.volumeInfo?.dimensions?.width }} × {{
+      book.volumeInfo?.dimensions?.thickness }}
+    </p>
+
+  </div>
+
+  <strong>Publisher: </strong>
+  <h4 id="publisher-name">{{ book.volumeInfo?.publisher }}</h4>
+
+  <div *ngIf="book.volumeInfo?.industryIdentifiers">
+    <strong>Identifier: </strong>
+    <div *ngFor="let identifier of book.volumeInfo?.industryIdentifiers">
+      <p id="isbn">{{ identifier.type }}: {{ identifier.identifier }}</p>
+    </div>
+  </div>
+
+  <div id="read-buy-links" *ngIf="book.accessInfo?.accessViewStatus != 'NONE'">
+    <hr />
+    <a href="{{ book.accessInfo?.webReaderLink }}"><strong>Read {{ accessViewStatus }} online</strong></a>
+    &nbsp;&nbsp;&nbsp;
+
+    <span *ngIf="book.saleInfo?.buyLink">
+      <span *ngIf="book.saleInfo?.retailPrice?.amount">
+        <a href="{{ book.saleInfo?.buyLink }}"><strong>Buy for {{ book.saleInfo?.retailPrice?.amount }} {{
+            book.saleInfo?.retailPrice?.currencyCode }}</strong></a>
+      </span>
+      <span *ngIf="book.saleInfo?.saleability == 'FREE'">
+        <a href="{{ book.saleInfo?.buyLink }}"><strong>Get for free</strong></a>
+      </span>
+
+    </span>
+  </div>
+
+  <hr />
+
+  <strong>Description: </strong>
+  <!-- Renders HTML tags included in description data from the API -->
+  <p [innerHTML]="book.volumeInfo?.description"></p>
+
+  <hr />
+
+  <div id="div-library-button">
+    <ion-button color="warning" *ngIf="(!isSaved)" (click)="addToLibrary()"><ion-icon
+        name="bookmark-outline"></ion-icon> &nbsp;Add to library</ion-button>
+    <ion-button color="danger" *ngIf="(isSaved)" (click)="removeFromLibrary()"><ion-icon
+        name="remove-circle-outline"></ion-icon> &nbsp;Remove from library</ion-button>
+  </div>
 
 </ion-content>
-

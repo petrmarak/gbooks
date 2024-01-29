@@ -4,24 +4,31 @@ import { HttpClient } from '@angular/common/http';
 import { BooksService } from 'src/app/services/books/books.service';
 import { BookVolume } from 'src/app/models/book.model';
 
+import ISO6391 from "iso-639-1";
+
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.page.html',
   styleUrls: ['./detail.page.scss'],
 })
 export class DetailPage implements OnInit {
+  isLoading: boolean = false;
+  ISO6391 = ISO6391;
   bookId: any;
   allData: any[] = [];
   
   book: BookVolume = {} as BookVolume;
   isSaved: boolean = false;
   allBooksInLibrary: BookVolume[] = [];
+  accessViewStatus: string = "";
 
-  constructor(public httpClient: HttpClient, private booksService: BooksService) { }
+  constructor(private httpClient: HttpClient, private booksService: BooksService) { }
 
   async ngOnInit() {
+    this.isLoading = true;
     this.bookId = this.booksService.bookId;
     this.allData = [];
+
     await this.booksService.configurePreferences('library');
 
     // get info about a specific book
@@ -36,7 +43,17 @@ export class DetailPage implements OnInit {
 
       // determines which button will be visible
       this.isSaved = await this.booksService.isBookStored(this.bookId);
-      console.warn('Is this book stored: ' + this.isSaved);
+
+      // get access type for online reading
+      if (this.book.accessInfo?.accessViewStatus) {
+        if (this.book.accessInfo.accessViewStatus == "FULL_PURCHASED" || this.book.accessInfo.accessViewStatus == "FULL_PUBLIC_DOMAIN")
+          this.accessViewStatus = "full book";
+        else if (this.book.accessInfo.accessViewStatus == "SAMPLE")
+          this.accessViewStatus = "sample";
+        else
+          this.accessViewStatus = "NONE";
+      }
+      this.isLoading = false;
     });
   }
 
@@ -44,40 +61,30 @@ export class DetailPage implements OnInit {
     this.isSaved = await this.booksService.isBookStored(this.bookId);
   }
 
-
-
-  async getAllBooksInLibrary() {
-    this.allBooksInLibrary = [];
-    const allKeys = await this.booksService.getAllKeys();  // (await Preferences.keys()).keys;
-
-    // load all books
-    for (const key of allKeys) {
-      const value: BookVolume = await this.booksService.getBook(key, true);
-      if (value)
-        this.allBooksInLibrary.push(value);
-    }
-  }
-
   async addToLibrary() {
-    if (!this.book.volumeInfo) {
+    if (!this.book.volumeInfo)
       return;
-    }
 
     await this.booksService.setBook(this.bookId, this.book);
     this.isSaved = true;
-
-    // TEST
-    await this.getAllBooksInLibrary();
-    console.warn('Number of books in library: ' + this.allBooksInLibrary.length);
   }
 
   async removeFromLibrary() {
     this.booksService.removeBook(this.bookId);
     this.isSaved = false;
-
-    // TEST
-    await this.getAllBooksInLibrary();
-    console.warn('Number of books in library: ' + this.allBooksInLibrary.length);
   }
 
+  getLanguageName(langCode?: string) {
+    let langName = "";
+    if (langCode) {
+      langName = ISO6391.getName(langCode);
+      if (langName)
+        return langName;
+      else  // name was not found for the langCode, so at least show the langCode itself
+        return langCode;
+    }
+    else {
+      return "";
+    }
+  }
 }

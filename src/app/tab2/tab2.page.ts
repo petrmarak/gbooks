@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page implements OnInit {
+  isLoading: boolean = false;
   allSavedBooks: BookVolume[] = [];
   online$: Observable<boolean>;
 
@@ -18,11 +19,13 @@ export class Tab2Page implements OnInit {
   }
 
   ngOnInit() {
+    this.isLoading = true;
   }
 
   async ionViewWillEnter() {
     await this.booksService.configurePreferences('library');
     await this.getAllSavedBooks();
+    this.isLoading = false;
   }
 
   sendData(bookId?: string) {
@@ -32,9 +35,9 @@ export class Tab2Page implements OnInit {
 
   async getAllSavedBooks() {
     this.allSavedBooks = [];
-    const allKeys = await this.booksService.getAllKeys();  // (await Preferences.keys()).keys;
+    const allKeys = await this.booksService.getAllKeys();
 
-    // load all books
+    // load all stored books
     for (const key of allKeys) {
       const value: BookVolume = await this.booksService.getBook(key, true);
       if (value)

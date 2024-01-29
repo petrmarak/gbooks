@@ -16,11 +16,11 @@ import { Observable } from 'rxjs';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
+  isLoading: boolean = false;
   booksResultArray: any[] = [];
   bookSearchString: string = "";
   authorSearchString: string = "";
   online$: Observable<boolean>;
-  isLoading: boolean = false;
   searchOptions: string = "";
 
   constructor(private httpClient: HttpClient, private modalCtrl: ModalController, private booksService: BooksService, 
