@@ -81,11 +81,11 @@
 
     <span *ngIf="book.saleInfo?.buyLink">
       <span *ngIf="book.saleInfo?.retailPrice?.amount">
-        <a href="{{ book.saleInfo?.buyLink }}"><strong>Buy for {{ book.saleInfo?.retailPrice?.amount }} {{
+        <a target="_blank" href="{{ book.saleInfo?.buyLink }}"><strong>Buy for {{ book.saleInfo?.retailPrice?.amount }} {{
             book.saleInfo?.retailPrice?.currencyCode }}</strong></a>
       </span>
       <span *ngIf="book.saleInfo?.saleability == 'FREE'">
-        <a href="{{ book.saleInfo?.buyLink }}"><strong>Get for free</strong></a>
+        <a target="_blank" href="{{ book.saleInfo?.buyLink }}"><strong>Get for free</strong></a>
       </span>
 
     </span>
