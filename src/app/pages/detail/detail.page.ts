@@ -13,7 +13,6 @@ import ISO6391 from "iso-639-1";
 })
 export class DetailPage implements OnInit {
   isLoading: boolean = false;
-  ISO6391 = ISO6391;
   bookId: any;
   allData: any[] = [];
   

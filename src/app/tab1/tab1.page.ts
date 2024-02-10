@@ -7,6 +7,7 @@ import { SearchOptionsModalComponent } from './search-options-modal/search-optio
 import { environment } from 'src/environments/environment';
 import { BooksService } from '../services/books/books.service';
 import { SearchService } from '../services/search/search.service';
+
 import { Network } from '@ngx-pwa/offline';
 import { Observable } from 'rxjs';
 
@@ -20,8 +21,9 @@ export class Tab1Page {
   booksResultArray: any[] = [];
   bookSearchString: string = "";
   authorSearchString: string = "";
-  online$: Observable<boolean>;
   searchOptions: string = "";
+
+  online$: Observable<boolean>;
 
   constructor(private httpClient: HttpClient, private modalCtrl: ModalController, private booksService: BooksService, 
     private searchService: SearchService, private network: Network) {
@@ -94,15 +96,15 @@ export class Tab1Page {
 
   moveSearchTop() {
     const containerElement = document.getElementById('container');
-    const searchBookIconElement = document.getElementById('search-book-icon');
+    const appIconElement = document.getElementById('app-icon');
     const mainTitleElement = document.getElementById('main-title');
 
     if (containerElement) {
       containerElement.style.top = '0%';
       containerElement.style.transform = 'translateY(0%)';
     }
-    if (searchBookIconElement) {
-      searchBookIconElement.style.display = 'none';
+    if (appIconElement) {
+      appIconElement.style.display = 'none';
     }
     if (mainTitleElement) {
       mainTitleElement.style.display = 'none';
@@ -111,15 +113,15 @@ export class Tab1Page {
 
   moveSearchCenter() {
     const containerElement = document.getElementById('container');
-    const searchBookIconElement = document.getElementById('search-book-icon');
+    const appIconElement = document.getElementById('app-icon');
     const mainTitleElement = document.getElementById('main-title');
 
     if (containerElement) {
       containerElement.style.top = '50%';
       containerElement.style.transform = 'translateY(-50%)';
     }
-    if (searchBookIconElement) {
-      searchBookIconElement.style.display = 'inline-block';
+    if (appIconElement) {
+      appIconElement.style.display = 'inline-block';
     }
     if (mainTitleElement) {
       mainTitleElement.style.display = 'inline-block';

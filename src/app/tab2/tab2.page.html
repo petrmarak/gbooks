@@ -4,47 +4,64 @@
       My library - {{ allSavedBooks.length }} {{ (allSavedBooks.length == 1) ? 'book' : 'books' }}
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button id="clearall-button" (click)="removeAllFromLibrary()">Clear all</ion-button>
+      <ion-button id="clearall-button">Clear all</ion-button>
     </ion-buttons>
     <ion-progress-bar type="indeterminate" *ngIf="isLoading"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
+<ion-alert trigger="clearall-button" header="Clear Library" message="Do you wish to remove all books from your library?"
+  [buttons]="alertButtons"></ion-alert>
+
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">My library - {{ allSavedBooks.length }} {{ (allSavedBooks.length == 1) ? 'book' : 'books' }}</ion-title>
+      <ion-title size="large">My library - {{ allSavedBooks.length }} {{ (allSavedBooks.length == 1) ? 'book' : 'books'
+        }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <div id="container" *ngIf="allSavedBooks.length > 0; else noItems">
-    <div *ngFor="let bookItem of allSavedBooks">
+    <ion-list lines="none">
+      <div *ngFor="let bookItem of allSavedBooks">
 
-      <ion-card [routerLink]="['detail', bookItem.id]" (click)="sendData(bookItem.id)">
 
-        <ion-grid>
-          <ion-row class="ion-align-items-start">
-            <ion-col size="auto">
-              <ion-card-content>
-                <img src="{{ bookItem.volumeInfo?.imageLinks?.thumbnail }}" />
-              </ion-card-content>
-            </ion-col>
+        <ion-item-sliding>
+          <ion-item>
+            <ion-card style="width: 100%;" [routerLink]="['detail', bookItem.id]" (click)="sendData(bookItem.id)">
 
-            <ion-col>
-              <ion-card-header>
-                <ion-card-title>{{ bookItem.volumeInfo?.title }}</ion-card-title>
-                <div *ngFor="let author of bookItem.volumeInfo?.authors">
-                  <ion-card-subtitle>{{ author }}</ion-card-subtitle>
-                </div>
-                <ion-card-subtitle>{{ bookItem.volumeInfo?.publishedDate }}</ion-card-subtitle>
-              </ion-card-header>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
+              <ion-grid>
+                <ion-row class="ion-align-items-start">
+                  <ion-col size="auto">
+                    <ion-card-content>
+                      <img src="{{ bookItem.volumeInfo?.imageLinks?.thumbnail }}" />
+                    </ion-card-content>
+                  </ion-col>
 
-      </ion-card>
+                  <ion-col>
+                    <ion-card-header>
+                      <ion-card-title>{{ bookItem.volumeInfo?.title }}</ion-card-title>
+                      <div *ngFor="let author of bookItem.volumeInfo?.authors">
+                        <ion-card-subtitle>{{ author }}</ion-card-subtitle>
+                      </div>
+                      <ion-card-subtitle>{{ bookItem.volumeInfo?.publishedDate }}</ion-card-subtitle>
+                    </ion-card-header>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
 
-    </div>
+            </ion-card>
+          </ion-item>
+
+          <ion-item-options side="end">
+            <ion-item-option color="danger" (click)="removeFromLibrary(bookItem.id)">
+              <ion-icon id="slide-remove-icon" name="trash"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+
+      </div>
+    </ion-list>
   </div>
 
   <ng-template #noItems>

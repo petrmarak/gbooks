@@ -49,11 +49,31 @@ export class Tab2Page implements OnInit {
     if (bookId) {
       this.booksService.removeBook(bookId);
     }
+
+    await this.getAllSavedBooks();
   }
 
   async removeAllFromLibrary() {
     await this.booksService.clearAllBooks();
     await this.getAllSavedBooks();
   }
+
+  public alertButtons = [
+    {
+      text: 'Cancel',
+      role: 'cancel',
+      handler: () => {
+        console.log('Alert canceled');
+      },
+    },
+    {
+      text: 'Yes',
+      role: 'confirm',
+      handler: () => {
+        console.log('Alert confirmed');
+        this.removeAllFromLibrary();
+      },
+    },
+  ];
 
 }

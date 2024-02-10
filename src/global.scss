@@ -32,3 +32,9 @@ ion-title {
 ion-tabs {
     font-family: 'SourceSans3-Medium';
 }
+
+@media (prefers-color-scheme: dark) {
+    ion-alert {
+        --background: #121212 !important;  // do not use linear-gradient purple-to-black background for alert windows
+    }
+}
